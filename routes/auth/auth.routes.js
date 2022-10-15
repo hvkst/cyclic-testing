@@ -30,12 +30,8 @@ passport.use(
       // Check if user and password is valid
       let user = await User.findOne({ username });
       let passwordValid = user && bcryptjs.compareSync(password, user.passwordHash);
-
-      console.log(user);
-
       // If password valid call done and serialize user.id to req.user property
       if (passwordValid) {
-        console.log('Logged in');
         return done(null, {
           id: user.id,
           name: user.username,
@@ -60,7 +56,12 @@ passport.deserializeUser(function (user, cb) {
 
 // Login Routes
 router.get('/login', isLoggedOut, function (req, res, next) {
-  res.render('auth/login');
+  try {
+    res.render('auth/login', { message: req.flash('error') });
+  } catch (err) {
+    console.error('Sorry, there was an error: ', err);
+    res.render('error');
+  }
 });
 
 router.post(
@@ -68,7 +69,10 @@ router.post(
   passport.authenticate('local-login', {
     successReturnToOrRedirect: '/dashboard',
     failureRedirect: '/login',
-    failureMessage: true,
+    successFlash: true,
+    failureFlash: true,
+    successFlash: 'Succesfull!',
+    failureFlash: 'Invalid username or password.',
   })
 );
 
@@ -77,7 +81,8 @@ router.get('/signup', isLoggedOut, (req, res, next) => {
   try {
     res.render('auth/signup');
   } catch (err) {
-    console.error(err);
+    console.error('Sorry, there was an error: ', err);
+    res.render('error');
   }
 });
 
@@ -103,7 +108,13 @@ router.post('/signup', async (req, res, next) => {
     const hashedPassword = await bcryptjs.hash(password, salt);
     const createdUser = await User.create({ username, passwordHash: hashedPassword });
     console.log('new user:', createdUser);
-    res.redirect('/dashboard');
+    // res.redirect('/login');
+    req.login(createdUser, function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/dashboard');
+    });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       res.status(500).render('auth/signup', { errorMessage: error.message });
@@ -119,12 +130,17 @@ router.post('/signup', async (req, res, next) => {
 
 // Logout Route
 router.post('/logout', isLoggedIn, function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-    res.redirect('/');
-  });
+  try {
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/');
+    });
+  } catch (err) {
+    console.error('Sorry, there was an error: ', err);
+    res.render('error');
+  }
 });
 
 module.exports = router;
