@@ -7,7 +7,7 @@
   "scope": "/",
   "theme_color": "#6c757d",
   "start_url": "https://successful-foal-flip-flops.cyclic.app/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "description": "A to-do list",
   "icons": [
     {
