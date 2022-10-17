@@ -1,17 +1,19 @@
 const staticCacheName = 'site-static';
 const assets = [
   '/',
-  '/login',
-  '/signup',
-  '/dashboard',
-  '/list',
+  // '/login',
+  // '/signup',
+  // '/dashboard',
+  // '/list',
   '/js/script.js',
+  '/js/bootstrap.bundle.min.js',
   '/stylesheets/style.css',
+  '/stylesheets/bootstrap.min.css',
   '/images/logo.png',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css',
+  '/images/to-do-list.jpg',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js',
 ];
+
 // install service worker
 self.addEventListener('install', (evt) => {
   // console.log('service worker has been installed');
@@ -31,9 +33,9 @@ self.addEventListener('activate', (evt) => {
 // fetch events
 self.addEventListener('fetch', (evt) => {
   // console.log('fetch event', evt);
-  evt.respondWith(
-    caches.match(evt.request).then((cacheRes) => {
-      return cacheRes || fetch(evt.request);
-    })
-  );
+  // evt.respondWith(
+  //   caches.match(evt.request).then((cacheRes) => {
+  //     return cacheRes || fetch(evt.request);
+  //   })
+  // );
 });
