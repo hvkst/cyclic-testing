@@ -8,6 +8,10 @@
   width: fit-content;
 }
 
+#list {
+  width: 500px;
+}
+
 .min-width {
   min-width: 25%;
 }
@@ -26,4 +30,8 @@
 
 .navbar-toggler-icon {
   font-size: 0.5em;
+}
+
+.date {
+  white-space: nowrap;
 }

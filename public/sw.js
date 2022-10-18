@@ -1,16 +1,21 @@
-const staticCacheName = 'site-static';
+const staticCacheName = 'site-static-v1';
 const assets = [
   '/',
   // '/login',
   // '/signup',
   // '/dashboard',
   // '/list',
+  '/js/appSw.js',
   '/js/script.js',
   '/js/bootstrap.bundle.min.js',
   '/stylesheets/style.css',
   '/stylesheets/bootstrap.min.css',
   '/images/logo.png',
-  '/images/to-do-list.jpg',
+  '/images/favicon.ico',
+  '/images/touch/homescreen512.png',
+  '/images/touch/homescreen192.png',
+  '/images/touch/apple-touch-icon.png',
+  '/manifest.json',
   'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css',
 ];
 
@@ -28,14 +33,20 @@ self.addEventListener('install', (evt) => {
 // activate event
 self.addEventListener('activate', (evt) => {
   // console.log('service worker has been activated');
+  evt.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(keys.filter((key) => key !== staticCacheName).map((key) => caches.delete(key)));
+    })
+  );
 });
 
 // fetch events
 self.addEventListener('fetch', (evt) => {
   // console.log('fetch event', evt);
+  // const reqClone = evt.request.clone();
   // evt.respondWith(
-  //   caches.match(evt.request).then((cacheRes) => {
-  //     return cacheRes || fetch(evt.request);
+  //   caches.match(reqClone).then((cacheRes) => {
+  //     return cacheRes || fetch(reqClone);
   //   })
   // );
 });
